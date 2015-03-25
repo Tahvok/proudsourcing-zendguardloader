@@ -25,7 +25,7 @@
 #
 class zendguardloader (
   $apache_modules_dir     = $zendguardloader::params::apache_modules_dir,
-  $php_modules_dir        = $zendguardloader::params::apache_php_dir,
+  $php_modules_dir        = $zendguardloader::params::php_modules_dir,
   $php_version            = $zendguardloader::params::php_version,
   $service                = $zendguardloader::params::service,
   $service_autorestart    = $zendguardloader::params::service_autorestart,
