@@ -1,6 +1,6 @@
 {
   "name": "Tahvok-zendguardloader",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Albert Mikaelyan",
   "license": "Apache-2.0",
   "summary": "Puppet module to install Zend Guard Loader for PHP 5.3 and PHP 5.4 (apache-linux-x64). Originally forked from Proud Sourcing GmbH.",
