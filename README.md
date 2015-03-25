@@ -17,7 +17,7 @@ Puppet module to install Zend Guard Loader for PHP 5.3 and PHP 5.4 (64-bit syste
                 apache_php_dir	=> ""
         }
 
-## Supported Operating Oystems
+## Supported Operating Systems
 
 * RedHat/Centos 5-7
 * Debian/Ubuntu (Not tested)
