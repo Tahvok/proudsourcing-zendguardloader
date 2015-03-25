@@ -39,7 +39,7 @@ class zendguardloader (
   file { 'ZendGuardLoader.so':
     ensure => present,
     path   => "${zendguardloader::apache_modules_dir}/ZendGuardLoader.so",
-    source => "puppet:///modules/zendguardloader/ZendGuardLoader-php-${zendguardloader::php_version}.so",
+    source => "puppet:///modules/zendguardloader/ZendGuardLoader-${zendguardloader::php_version}.so",
   }
 
   file { 'loader.ini':
