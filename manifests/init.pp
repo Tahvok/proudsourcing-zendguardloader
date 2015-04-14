@@ -24,11 +24,16 @@
 #
 #
 class zendguardloader (
-  $apache_modules_dir     = $zendguardloader::params::apache_modules_dir,
-  $php_modules_dir        = $zendguardloader::params::php_modules_dir,
+  $module_dir             = undef,
+  $module_dir_array       = $zendguardloader::params::module_dir_array,
+  $guardloader_file       = undef,
+  $guardloader_file_array = $zendguardloader::params::guardloader_file_array,
+  $php_config_dir         = $zendguardloader::params::php_modules_dir,
   $php_version            = $zendguardloader::params::php_version,
   $service                = $zendguardloader::params::service,
   $service_autorestart    = $zendguardloader::params::service_autorestart,
+  $config_template        = $zendguardloader::params::config_template,
+  $enable_module_command  = $zendguardloader::params::enable_module_command,
 ) inherits zendguardloader::params {
 
   $realservice_autorestart = $service_autorestart ? {
@@ -36,18 +41,40 @@ class zendguardloader (
     false => undef,
   }
 
+  if ($module_dir) {
+    $module_dir = $zendguardloader::module_dir_array[$php_version]
+  }
+
+  if ($guardloader_file) {
+    $guardloader_file = $zendguardloader::guardloader_file_array[$zendguardloader::php_version]
+  }
+
+
   file { 'ZendGuardLoader.so':
     ensure => present,
-    path   => "${zendguardloader::apache_modules_dir}/ZendGuardLoader.so",
-    source => "puppet:///modules/zendguardloader/ZendGuardLoader-${zendguardloader::php_version}.so",
+    path   => "${zendguardloader::module_dir}/ZendGuardLoader.so",
+    source => $zendguardloader::guardloader_file,
   }
 
   file { 'loader.ini':
     ensure    => present,
-    path      => "${zendguardloader::php_modules_dir}/loader.ini",
-    content   => template('zendguardloader/loader.ini.erb'),
-    subscribe => File["${zendguardloader::apache_modules_dir}/ZendGuardLoader.so"],
+    path      => "${zendguardloader::php_config_dir}/loader.ini",
+    content   => $zendguardloader::config_template,
+    subscribe => File['ZendGuardLoader.so'],
     notify    => $zendguardloader::realservice_autorestart,
   }
 
+  case $::osfamily {
+
+    'Debian': {
+      exec { 'enable_loader':
+        command     => $zendguardloader::enable_module_command,
+        refreshonly => true,
+        subscribe   => File['loader.ini'],
+      }
+    }
+
+    default: {
+    }
+  }
 }
